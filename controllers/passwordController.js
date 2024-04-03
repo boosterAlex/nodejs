@@ -1,17 +1,18 @@
+const { generateHash, isEqualPassword } = require('../services/passwordSevice');
+
 const getPassword = (req, res) => {
     const postData = [];
+
     req.on('data', (chunk) => {
         postData.push(chunk);
     });
 
     req.on('end', () => {
-        // const parsedData = querystring.parse(postData);
         const parsedData = JSON.parse(postData);
-        let logIn = {
-            isValid: false,
+
+        const logIn = {
+            isValid: isEqualPassword(generateHash(parsedData.password)),
         };
-        if (parsedData.password === 'super-secure-password')
-            logIn.isValid = true;
 
         res.end(JSON.stringify(logIn));
     });
